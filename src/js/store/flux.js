@@ -38,6 +38,29 @@ const getState = ({ getStore, setStore }) => {
 						})
 						.catch(e => console.error(e));
 				});
+			},
+			editContact(id, name, phone, email, address) {
+				fetch(url + id, {
+					method: "put",
+					headers: { "Content-type": "application/json" },
+					body: JSON.stringify({
+						full_name: name,
+						phone: phone,
+						address: address,
+						email: email,
+						agenda_slug: "downtown_xii"
+					})
+				}).then(() => {
+					fetch(url + "agenda/downtown_xii")
+						.then(response => response.json())
+						.then(result => {
+							console.log("update", result),
+								setStore({
+									contacts: result
+								});
+						})
+						.catch(e => console.error(e));
+				});
 			}
 		}
 	};
