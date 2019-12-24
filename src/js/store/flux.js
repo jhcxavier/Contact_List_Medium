@@ -61,6 +61,21 @@ const getState = ({ getStore, setStore }) => {
 						})
 						.catch(e => console.error(e));
 				});
+			},
+			deleteContact(id) {
+				fetch(url + id, {
+					method: "delete"
+				}).then(() => {
+					fetch(url + "agenda/downtown_xii")
+						.then(response => response.json())
+						.then(result => {
+							console.log("result", result),
+								setStore({
+									contacts: result
+								});
+						})
+						.catch(e => console.error(e));
+				});
 			}
 		}
 	};
