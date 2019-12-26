@@ -6,9 +6,7 @@ import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 
 export const ContactCard = props => {
-	const [state, setState] = useState({
-		//initialize state here
-	});
+
 	const { store, actions } = useContext(Context);
 	console.log("storeeee", store.contacts);
 	return (
