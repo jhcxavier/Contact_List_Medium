@@ -7,10 +7,12 @@ export const EditContact = props => {
 	// let short = store.contacts[props.match.params.index];
 	let id = props.match.params.id;
 	const { store, actions } = useContext(Context);
-	const [phone, setPhone] = useState(store.contacts[props.match.params.index].phone);
-	const [name, setName] = useState(store.contacts[props.match.params.index].full_name);
-	const [email, setEmail] = useState(store.contacts[props.match.params.index].email);
-	const [address, setAddress] = useState(store.contacts[props.match.params.index].address);
+	let contact = store.contacts[props.match.params.index];
+	const [phone, setPhone] = useState(contact ? contact.phone : "");
+	const [name, setName] = useState(contact ? contact.full_name : "");
+	const [email, setEmail] = useState(contact ? contact.email : "");
+	const [address, setAddress] = useState(contact ? contact.address : "");
+
 	if (store == undefined) {
 		return <h1>Loading...</h1>;
 	} else {
@@ -78,6 +80,7 @@ export const EditContact = props => {
 		);
 	}
 };
+
 EditContact.propTypes = {
 	match: PropTypes.object
 };
