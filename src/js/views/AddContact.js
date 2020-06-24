@@ -4,14 +4,14 @@ import { Context } from "../store/appContext";
 
 export const AddContact = () => {
 	const { actions } = useContext(Context);
-	const [phone, setPhone] = useState("");
+	const [phone, setPhone] = useState("12345");
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [address, setAddress] = useState("");
 	return (
 		<div className="container">
 			<div>
-				<h1 className="text-center mt-5">Add a new contact</h1>
+				<h1 className="text-center mt-5">Add a new contactTTTTTTT</h1>
 				<form>
 					<div className="form-group">
 						<label>Full Name</label>
