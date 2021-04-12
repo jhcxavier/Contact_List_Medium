@@ -1,10 +1,32 @@
+import firebase from "firebase/app";
+
 const url = "https://assets.breatheco.de/apis/fake/contact/";
 const getState = ({ getStore, setStore }) => {
 	return {
 		store: {
-			contacts: []
+			userId: "",
+			contacts: [],
+			contactsFB: []
 		},
 		actions: {
+			getUserId: userId => {
+				setStore(userId);
+			},
+			getContactFromFB: async () => {
+				try {
+					const getContact = firebase.firestore().collection("contacts");
+					const response = await getContact.get();
+					console.log("response", response);
+					// console.log("contact", response[0].data(), response.data());
+					response.forEach(contact => {
+						console.log("contactforEach", contact);
+						setStore({ contactsFB: [...getStore().contactsFB, { ...contact.data(), id: contact.id }] });
+					});
+				} catch (e) {
+					// console.log(e.message);
+					console.log(e);
+				}
+			},
 			loadContact() {
 				fetch(url + "agenda/downtown_xii")
 					.then(response => response.json())

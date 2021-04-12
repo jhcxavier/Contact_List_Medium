@@ -49,7 +49,7 @@ export const AddContact = () => {
 							onChange={e => setAddress(e.target.value)}
 						/>
 					</div>
-					<Link to={"/"}>
+					<Link to={"/home"}>
 						<button
 							type="button"
 							className="btn btn-primary form-control"
