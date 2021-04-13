@@ -14,7 +14,7 @@ const getState = ({ getStore, setStore }) => {
 			},
 			getContactFromFB: async () => {
 				try {
-					const getContact = firebase.firestore().collection("contacts");
+					const getContact = firebase.firestore().collection("newContacts");
 					const response = await getContact.get();
 					console.log("response", response);
 					// console.log("contact", response[0].data(), response.data());
@@ -25,6 +25,8 @@ const getState = ({ getStore, setStore }) => {
 				} catch (e) {
 					// console.log(e.message);
 					console.log(e);
+				} finally {
+					console.log("LAst result", getStore().contactsFB);
 				}
 			},
 			loadContact() {
