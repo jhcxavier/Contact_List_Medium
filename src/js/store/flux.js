@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import "firebase/firestore";
 
 const url = "https://assets.breatheco.de/apis/fake/contact/";
 const getState = ({ getStore, setStore }) => {
@@ -18,9 +19,11 @@ const getState = ({ getStore, setStore }) => {
 					const response = await getContact.get();
 					console.log("response", response);
 					// console.log("contact", response[0].data(), response.data());
+					let arr = [];
 					response.forEach(contact => {
 						console.log("contactforEach", contact);
-						setStore({ contactsFB: [...getStore().contactsFB, { ...contact.data(), id: contact.id }] });
+						arr = [...arr, { ...contact.data(), id: contact.id }];
+						setStore({ contactsFB: arr });
 					});
 				} catch (e) {
 					// console.log(e.message);
@@ -28,6 +31,24 @@ const getState = ({ getStore, setStore }) => {
 				} finally {
 					console.log("LAst result", getStore().contactsFB);
 				}
+			},
+			addContactFB: async (name, phone, email, address) => {
+				return firebase
+					.firestore()
+					.collection("newContacts")
+					.doc()
+					.set({
+						full_name: name,
+						phone,
+						email,
+						address
+					})
+					.then(() => {
+						console.log("Document successfully written!");
+					})
+					.catch(error => {
+						console.error("Error writing document: ", error);
+					});
 			},
 			loadContact() {
 				fetch(url + "agenda/downtown_xii")
