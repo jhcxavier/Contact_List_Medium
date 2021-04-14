@@ -7,7 +7,7 @@ export const EditContact = props => {
 	// let short = store.contacts[props.match.params.index];
 	let id = props.match.params.id;
 	const { store, actions } = useContext(Context);
-	let contact = store.contacts[props.match.params.index];
+	let contact = store.contactsFB[props.match.params.index];
 	const [phone, setPhone] = useState(contact ? contact.phone : "");
 	const [name, setName] = useState(contact ? contact.full_name : "");
 	const [email, setEmail] = useState(contact ? contact.email : "");
@@ -66,7 +66,7 @@ export const EditContact = props => {
 								type="button"
 								className="btn btn-primary form-control"
 								onClick={() => {
-									actions.editContact(id, name, phone, email, address);
+									actions.addContactFB(name, phone, email, address, id);
 								}}>
 								save
 							</button>

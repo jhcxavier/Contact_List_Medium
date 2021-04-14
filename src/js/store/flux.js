@@ -32,11 +32,11 @@ const getState = ({ getStore, setStore }) => {
 					console.log("LAst result", getStore().contactsFB);
 				}
 			},
-			addContactFB: async (name, phone, email, address) => {
+			addContactFB: async (name, phone, email, address, doc) => {
 				return firebase
 					.firestore()
 					.collection("newContacts")
-					.doc()
+					.doc(doc)
 					.set({
 						full_name: name,
 						phone,
@@ -50,6 +50,7 @@ const getState = ({ getStore, setStore }) => {
 						console.error("Error writing document: ", error);
 					});
 			},
+
 			loadContact() {
 				fetch(url + "agenda/downtown_xii")
 					.then(response => response.json())
