@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 const url = "https://assets.breatheco.de/apis/fake/contact/";
-const getState = ({ getStore, setStore }) => {
+const getState = ({ getStore, setStore, getActions }) => {
 	return {
 		store: {
 			userId: "",
@@ -26,7 +26,6 @@ const getState = ({ getStore, setStore }) => {
 						setStore({ contactsFB: arr });
 					});
 				} catch (e) {
-					// console.log(e.message);
 					console.log(e);
 				} finally {
 					console.log("LAst result", getStore().contactsFB);
@@ -48,80 +47,22 @@ const getState = ({ getStore, setStore }) => {
 					})
 					.catch(error => {
 						console.error("Error writing document: ", error);
-					});
-			},
-
-			loadContact() {
-				fetch(url + "agenda/downtown_xii")
-					.then(response => response.json())
-					.then(result => {
-						console.log("Get Contact", result),
-							setStore({
-								contacts: result
-							});
 					})
-					.catch(e => console.error(e));
+					.then(() => getActions().getContactFromFB());
 			},
-			addContact(name, phone, email, address) {
-				fetch(url, {
-					method: "post",
-					headers: { "Content-type": "application/json" },
-					body: JSON.stringify({
-						full_name: name,
-						phone: phone,
-						address: address,
-						email: email,
-						agenda_slug: "downtown_xii"
+			deleteContactFB: id => {
+				return firebase
+					.firestore()
+					.collection("newContacts")
+					.doc(id)
+					.delete()
+					.then(() => {
+						console.log("Document successfully deleted!");
 					})
-				}).then(() => {
-					fetch(url + "agenda/downtown_xii")
-						.then(response => response.json())
-						.then(result => {
-							console.log("result", result),
-								setStore({
-									contacts: result
-								});
-						})
-						.catch(e => console.error(e));
-				});
-			},
-			editContact(id, name, phone, email, address) {
-				fetch(url + id, {
-					method: "put",
-					headers: { "Content-type": "application/json" },
-					body: JSON.stringify({
-						full_name: name,
-						phone: phone,
-						address: address,
-						email: email,
-						agenda_slug: "downtown_xii"
+					.catch(error => {
+						console.error("Error removing document: ", error);
 					})
-				}).then(() => {
-					fetch(url + "agenda/downtown_xii")
-						.then(response => response.json())
-						.then(result => {
-							console.log("update", result),
-								setStore({
-									contacts: result
-								});
-						})
-						.catch(e => console.error(e));
-				});
-			},
-			deleteContact(id) {
-				fetch(url + id, {
-					method: "delete"
-				}).then(() => {
-					fetch(url + "agenda/downtown_xii")
-						.then(response => response.json())
-						.then(result => {
-							console.log("result", result),
-								setStore({
-									contacts: result
-								});
-						})
-						.catch(e => console.error(e));
-				});
+					.then(() => getActions().getContactFromFB());
 			}
 		}
 	};
