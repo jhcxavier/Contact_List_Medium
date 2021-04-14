@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { withRouter } from "react-router-dom";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import MikePhoto from "../../img/m101.jpg";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 
-export const ContactCard = props => {
+export const ContactCard = () => {
 	const { store, actions } = useContext(Context);
 	console.log("storeeee", store.contacts);
 	return (

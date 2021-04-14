@@ -1,7 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-const url = "https://assets.breatheco.de/apis/fake/contact/";
 const getState = ({ getStore, setStore, getActions }) => {
 	return {
 		store: {
@@ -50,7 +49,7 @@ const getState = ({ getStore, setStore, getActions }) => {
 					})
 					.then(() => getActions().getContactFromFB());
 			},
-			deleteContactFB: id => {
+			deleteContactFB: async id => {
 				return firebase
 					.firestore()
 					.collection("newContacts")
