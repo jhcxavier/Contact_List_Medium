@@ -28,7 +28,8 @@ const injectContext = PassedComponent => {
 			 * you should do your ajax requests or fetch api requests here
 			 * state.loadSomeData(); <---- calling this function from the flux.js actions
 			 **/
-			state.actions.loadContact();
+			// state.actions.loadContact();
+			state.actions.getContactFromFB();
 			window.store = state.store;
 		}, []);
 

@@ -9,9 +9,9 @@ export const Contacts = () => {
 	const [state, setState] = useState({
 		showModal: false
 	});
-	useEffect(() => {
-		actions.getContactFromFB();
-	}, []);
+	// useEffect(() => {
+	// 	actions.getContactFromFB();
+	// }, []);
 	console.log("store FB", store.contactsFB);
 	return (
 		<div className="container">
