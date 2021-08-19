@@ -1,81 +1,85 @@
+import firebase from "firebase";
 const url = "https://assets.breatheco.de/apis/fake/contact/";
-const getState = ({ getStore, setStore }) => {
+const getState = ({ getStore, setStore, getActions }) => {
 	return {
 		store: {
-			contacts: []
+			contacts: [],
+			contactsFB: []
 		},
 		actions: {
-			loadContact() {
-				fetch(url + "agenda/downtown_xii")
-					.then(response => response.json())
-					.then(result => {
-						console.log("Get Contact", result),
-							setStore({
-								contacts: result
+			createUser: (email, password, fullName) => {
+				const db = firebase.firestore();
+				firebase
+					.auth()
+					.createUserWithEmailAndPassword(email, password)
+					.then(cred => {
+						setStore({ userId: cred.user.uid });
+						return db
+							.collection("users")
+							.doc(cred.user.uid)
+							.set({
+								fullName: fullName
 							});
-					})
-					.catch(e => console.error(e));
+					});
 			},
-			addContact(name, phone, email, address) {
-				fetch(url, {
-					method: "post",
-					headers: { "Content-type": "application/json" },
-					body: JSON.stringify({
+			signin: async (email, password) => {
+				return firebase
+					.auth()
+					.signInWithEmailAndPassword(email, password)
+					.then(() =>
+						firebase.auth().onAuthStateChanged(user => {
+							if (user) {
+								setStore({ userId: user.uid });
+							}
+						})
+					);
+			},
+			getUserId: userId => {
+				setStore(userId);
+			},
+			getContactFromFB: async () => {
+				try {
+					const getContact = firebase
+						.firestore()
+						.collection("newContacts")
+						.doc();
+					const response = await getContact.get();
+					console.log("response", response);
+					let arr = [];
+					response &&
+						response.forEach(contact => {
+							arr.push({ ...contact.data(), contact: contact.userId });
+						});
+					setStore({ contactsFB: arr });
+				} catch (e) {
+					console.log(e);
+				}
+			},
+			addContactFB: (name, phone, email, address, id) => {
+				firebase
+					.firestore()
+					.collection("newContacts")
+					.doc(getStore().userId)
+					.set({
 						full_name: name,
 						phone: phone,
-						address: address,
 						email: email,
-						agenda_slug: "downtown_xii"
-					})
-				}).then(() => {
-					fetch(url + "agenda/downtown_xii")
-						.then(response => response.json())
-						.then(result => {
-							console.log("result", result),
-								setStore({
-									contacts: result
-								});
-						})
-						.catch(e => console.error(e));
-				});
-			},
-			editContact(id, name, phone, email, address) {
-				fetch(url + id, {
-					method: "put",
-					headers: { "Content-type": "application/json" },
-					body: JSON.stringify({
-						full_name: name,
-						phone: phone,
 						address: address,
-						email: email,
-						agenda_slug: "downtown_xii"
+						userId: getStore().userId
 					})
-				}).then(() => {
-					fetch(url + "agenda/downtown_xii")
-						.then(response => response.json())
-						.then(result => {
-							console.log("update", result),
-								setStore({
-									contacts: result
-								});
-						})
-						.catch(e => console.error(e));
-				});
+					.catch(error => {
+						alert(error);
+					})
+					.then(() => getActions().getContactFromFB());
 			},
-			deleteContact(id) {
-				fetch(url + id, {
-					method: "delete"
-				}).then(() => {
-					fetch(url + "agenda/downtown_xii")
-						.then(response => response.json())
-						.then(result => {
-							console.log("result", result),
-								setStore({
-									contacts: result
-								});
-						})
-						.catch(e => console.error(e));
-				});
+			deleteContactFB: id => {
+				firebase
+					.firestore()
+					.collection("newContacts")
+					.doc(id)
+					.delete()
+					.catch(e => console.log(e))
+					.then(() => getActions().getContactFromFB());
 			}
 		}
 	};
