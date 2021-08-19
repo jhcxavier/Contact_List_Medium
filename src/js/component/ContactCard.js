@@ -10,8 +10,8 @@ export const ContactCard = props => {
 	console.log("storeeee", store.contacts);
 	return (
 		<div>
-			{store.contacts &&
-				store.contacts.map((e, index) => {
+			{store.contactsFB &&
+				store.contactsFB.map((e, index) => {
 					return (
 						<li key={index} className="list-group-item">
 							<div className="row w-100">
